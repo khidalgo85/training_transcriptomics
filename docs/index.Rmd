@@ -508,39 +508,13 @@ class: center, middle, inverse
 ---
 ## Práctica III
 
-
-**Abordaje 1**
-
-* <font size=2>Estimación del tamaño del genoma: Jellyfish</font>
-* <font size=2>Montaje del genoma: Canu</font>
-* <font size=2>Evaluación de la calidad del raw assembly: Quast/BUSCO</font>
-* <font size=2>Alineamiento short reads/ raw assembly: BWA</font>
-* <font size=2>Polishing: Polca/MaSurCa tool kit</font>
-* <font size=2>Evaluación de la calidad del ensamble mejorado: Quast/BUSCO</font>
+* Ensamble del genoma
+* Evaluación de la calidad: Quast y CheckM
+* Anotación Taxonómica
 
 
 ---
-## Práctica III
 
-**Abordaje 2**
-* <font size=2>Estimación del tamaño del genoma: Jellyfish</font>
-* <font size=2>Montaje del genoma: Canu</font>
-* <font size=2>Montaje: Spades</font>
-* <font size=2>Evaluación de la calidad del raw assembly: Quast/BUSCO</font>
-* <font size=2>Alineamiento short reads/ raw assembly: BWA</font>
-* <font size=2>Polishing: Polca/MaSurCa tool kit</font>
-* <font size=2>Evaluación de la calidad del ensamble mejorado: Quast/BUSCO</font>
-
----
-## Práctica III
-
-.center[
-<img src="imgs/montaje.png" width=90%>
-]
-
-[Tutorial](https://github.com/khidalgo85/Genomica_Transcriptomica_Levadura#readme)
-
----
 class: center, middle, inverse
 
 # Teoría Parte IV: Predicción de genes
@@ -582,20 +556,7 @@ Los algorítmos están entrenados para reconocer señales en la región promotor
 Los programas pueden reconocer señales la región terminadora de los genes
 
   * Codón de terminación *stop codon*
----
-## Estructura de los genes
-
-**Eucariotos**
-
-.center[<img src="imgs/geneeucarioto.png" width=85%>]
-
----
-## Predicción de genes en eucariotos
-
-* **Mucho** más complejo!
-* Splicing alternativo
-* Los algorítmos están entrenados para reconocer señales en los introns
-
+  
 ---
 class: center, middle, inverse
 
@@ -609,10 +570,9 @@ class: center, middle, inverse
 
 **Contenido**
 
-* Entrenamiento de los predicción genes: STAR, SamTools, Augustus, Braker
-* Predicción de genes: Augustus
-* Anotación de genes: Blast2Go, EggNog, UniprotK, Blast
-* Análisis de vías metabólicas: KAAS, KeggMapper, BlastKoala
+* Predicción de genes
+
+
 
 [Tutorial](https://github.com/khidalgo85/Genomica_Transcriptomica_Levadura#readme)
 ---
@@ -648,7 +608,7 @@ class: hide_logo
 * Ensamblaje del Transcriptoma (**StringTie**, Trinity, Cufflinks)
 * Cuantificación de la expresión (featureCounts, Cuffquant, HTSeq-count, **Kallisto**)
 * Expresión diferencial (**DESeq2**, edgeR, **Sleuth**, Ballgown)
-* Anotación: **Blast+**, **EggNOG mapper**.
+* Anotación: **Diamond**, **KEGG**, **EggNOG mapper**.
 
 ---
 class: hide_logo
@@ -678,12 +638,11 @@ class: center, middle, inverse
 
 **Contenido**
 
-* Control de Calidad de las secuencias RNA-seq: FastQC, Trimmomatic
 * Alineamiento: HISAT2
 * Ensamblaje: StringTie
 * Cuantificación de la expresión: Kallisto
-* Expresión diferencial: DESeq2
-* Anotación: Blast, EggNOG mapper
+* Expresión diferencial: DESeq2, Sleuth
+* Anotación: Diamond, KEGG, EggNOG
 
 [Tutorial](https://github.com/khidalgo85/Genomica_Transcriptomica_Levadura#readme)
 ---

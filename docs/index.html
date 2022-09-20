@@ -4,9 +4,9 @@
     <title>Colaboración Científica CIBAS/UDES - GEMM/UNICAMP</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kelly Hidalgo" />
-    <meta name="date" content="2022-09-19" />
+    <meta name="date" content="2022-09-20" />
     <script src="index_files/header-attrs-2.14/header-attrs.js"></script>
-    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"xed03471581247888fa804a00ca077ec","expires":1}</script>
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"x694ae3c725048028404ce18b42d44dc","expires":1}</script>
     <script src="index_files/himalaya-1.1.0/himalaya.js"></script>
     <script src="index_files/js-cookie-3.0.0/js.cookie.js"></script>
     <link href="index_files/editable-0.2.6/editable.css" rel="stylesheet" />
@@ -36,7 +36,7 @@ class: center, middle, inverse, title-slide
 ## Pasantía en Bioinformática - Transcriptómica
 ### Kelly Hidalgo
 ### Grupo de Ecologia Microbiana e Multi-ômicas
-### 2022-09-19
+### 2022-09-20
 
 ---
 
@@ -520,39 +520,13 @@ class: center, middle, inverse
 ---
 ## Práctica III
 
-
-**Abordaje 1**
-
-* &lt;font size=2&gt;Estimación del tamaño del genoma: Jellyfish&lt;/font&gt;
-* &lt;font size=2&gt;Montaje del genoma: Canu&lt;/font&gt;
-* &lt;font size=2&gt;Evaluación de la calidad del raw assembly: Quast/BUSCO&lt;/font&gt;
-* &lt;font size=2&gt;Alineamiento short reads/ raw assembly: BWA&lt;/font&gt;
-* &lt;font size=2&gt;Polishing: Polca/MaSurCa tool kit&lt;/font&gt;
-* &lt;font size=2&gt;Evaluación de la calidad del ensamble mejorado: Quast/BUSCO&lt;/font&gt;
+* Ensamble del genoma
+* Evaluación de la calidad: Quast y CheckM
+* Anotación Taxonómica
 
 
 ---
-## Práctica III
 
-**Abordaje 2**
-* &lt;font size=2&gt;Estimación del tamaño del genoma: Jellyfish&lt;/font&gt;
-* &lt;font size=2&gt;Montaje del genoma: Canu&lt;/font&gt;
-* &lt;font size=2&gt;Montaje: Spades&lt;/font&gt;
-* &lt;font size=2&gt;Evaluación de la calidad del raw assembly: Quast/BUSCO&lt;/font&gt;
-* &lt;font size=2&gt;Alineamiento short reads/ raw assembly: BWA&lt;/font&gt;
-* &lt;font size=2&gt;Polishing: Polca/MaSurCa tool kit&lt;/font&gt;
-* &lt;font size=2&gt;Evaluación de la calidad del ensamble mejorado: Quast/BUSCO&lt;/font&gt;
-
----
-## Práctica III
-
-.center[
-&lt;img src="imgs/montaje.png" width=90%&gt;
-]
-
-[Tutorial](https://github.com/khidalgo85/Genomica_Transcriptomica_Levadura#readme)
-
----
 class: center, middle, inverse
 
 # Teoría Parte IV: Predicción de genes
@@ -594,20 +568,7 @@ Los algorítmos están entrenados para reconocer señales en la región promotor
 Los programas pueden reconocer señales la región terminadora de los genes
 
   * Codón de terminación *stop codon*
----
-## Estructura de los genes
-
-**Eucariotos**
-
-.center[&lt;img src="imgs/geneeucarioto.png" width=85%&gt;]
-
----
-## Predicción de genes en eucariotos
-
-* **Mucho** más complejo!
-* Splicing alternativo
-* Los algorítmos están entrenados para reconocer señales en los introns
-
+  
 ---
 class: center, middle, inverse
 
@@ -621,10 +582,9 @@ class: center, middle, inverse
 
 **Contenido**
 
-* Entrenamiento de los predicción genes: STAR, SamTools, Augustus, Braker
-* Predicción de genes: Augustus
-* Anotación de genes: Blast2Go, EggNog, UniprotK, Blast
-* Análisis de vías metabólicas: KAAS, KeggMapper, BlastKoala
+* Predicción de genes
+
+
 
 [Tutorial](https://github.com/khidalgo85/Genomica_Transcriptomica_Levadura#readme)
 ---
@@ -660,7 +620,7 @@ class: hide_logo
 * Ensamblaje del Transcriptoma (**StringTie**, Trinity, Cufflinks)
 * Cuantificación de la expresión (featureCounts, Cuffquant, HTSeq-count, **Kallisto**)
 * Expresión diferencial (**DESeq2**, edgeR, **Sleuth**, Ballgown)
-* Anotación: **Blast+**, **EggNOG mapper**.
+* Anotación: **Diamond**, **KEGG**, **EggNOG mapper**.
 
 ---
 class: hide_logo
@@ -690,12 +650,11 @@ class: center, middle, inverse
 
 **Contenido**
 
-* Control de Calidad de las secuencias RNA-seq: FastQC, Trimmomatic
 * Alineamiento: HISAT2
 * Ensamblaje: StringTie
 * Cuantificación de la expresión: Kallisto
-* Expresión diferencial: DESeq2
-* Anotación: Blast, EggNOG mapper
+* Expresión diferencial: DESeq2, Sleuth
+* Anotación: Diamond, KEGG, EggNOG
 
 [Tutorial](https://github.com/khidalgo85/Genomica_Transcriptomica_Levadura#readme)
 ---
