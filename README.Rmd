@@ -1210,7 +1210,11 @@ conda install -c bioconda prodigal
 
 Para ejecutar el programa utilice el seguiente comando:
 ```
-prodigal -f gff -i 03.Assembly/03.Scaffolds/careful_filtered.fasta -o 05.GenePrediction/careful_filtered_orf.gff -a 05.GenePrediction/careful_filtered_proteins.faa -d 05.GenePrediction/careful_filtered_ORFnucleotides.fa -s 05.GenePrediction/careful_filtered_genes
+# Cree una carpeta para guardar el resultado
+mkdir 06.GenePrediction
+
+#
+prodigal -f gff -i 03.Assembly/03.Scaffolds/careful_filtered.fasta -o 06.GenePrediction/careful_filtered_orf.gff -a 06.GenePrediction/careful_filtered_proteins.faa -d 06.GenePrediction/careful_filtered_ORFnucleotides.fa -s 06.GenePrediction/careful_filtered_genes
 ```
 
 **Sintaxis**
@@ -1218,7 +1222,7 @@ prodigal -f gff -i 03.Assembly/03.Scaffolds/careful_filtered.fasta -o 05.GenePre
 prodigal -f <output_format> -i <input_assembly.fasta> -o <output_gbk_file> -a <output_protein_seq_file> -d <output_nucleotides_seq_file> -s <output_coordinates_file>
 ```
 
-El archivo `05.GenePrediction/careful_filtered_orf.gff` incluyendo las secuencias condificantes y no codificantes y las posiciones en cada contig. Adicionalmente, el programa genera archivos con las secuencias de nucleótidos (`05.GenePrediction/careful_filtered_ORFnucleotides.fa`) y proteínas (`05.GenePrediction/careful_filtered_proteins.faa`) de cada gene predicho.
+El archivo `06.GenePrediction/careful_filtered_orf.gff` incluyendo las secuencias condificantes y no codificantes y las posiciones en cada contig. Adicionalmente, el programa genera archivos con las secuencias de nucleótidos (`06.GenePrediction/careful_filtered_ORFnucleotides.fa`) y proteínas (`06.GenePrediction/careful_filtered_proteins.faa`) de cada gene predicho.
 
 *Nota:* Ejecute el mismo comando en el genoma de *E. coli* ATCC8739. Use `ecoli_genome_` como prefijo para los nombres de los archivos de salida.
 
@@ -1284,7 +1288,7 @@ conda install -c bioconda samtools
 
 #### 5.2.1. Indexando el genoma de referencia
 
-El primer paso para el alineamiento es indexar el genoma. Cree un directorio para todo el proceso de mapeo (p.e. `07.Mapping.RNA`)
+El primer paso para el alineamiento es indexar el genoma. Cree un directorio para todo el proceso de mapeo (p.e. `08.Mapping.RNA`)
 
 ```
 # Indexando
@@ -1301,7 +1305,7 @@ hisat2-build -p 10 03.Assembly/Escherichia_coli_ATCC_8739.fasta 08.Mapping.RNA/E
 
 #### 5.2.2. Mapeo
 
-En la siguiente linea de código, hay dos comandos separados por `|` (*pipe*). Primero **HISAT2** va a hacer el alinemiento, el cual generará una serie de archivos `.sam` (*Sequence aligment Map*). En el segundo comando, **SamTools** transformará a archivos `.bam` (*Binary Alignment Map*), los cuales son una versión comprimida de `.sam`. 
+En el primer comando **HISAT2** va a hacer el alinemiento, el cual generará una serie de archivos `.sam` (*Sequence aligment Map*). En el segundo comando, **SamTools** transformará a archivos `.bam` (*Binary Alignment Map*), los cuales son una versión comprimida de `.sam`. 
 
 ```
 hisat2  --dta -p 15 -x 08.Mapping.RNA/Escherichia_coli_ATCC_8739 -1 00.RawData/acetone_1.fq -2 00.RawData/acetone_2.fq -S 08.Mapping.RNA/acetone.sam
@@ -1365,13 +1369,14 @@ Cree un directorio para la salida del proceso:
 mkdir 09.AssemblyRNA
 
 # StringTie
-stringtie acetone.bam -p 25 -G 05.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/acetone_stringtie.gtf
+stringtie acetone.bam -p 25 -G 06.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/acetone_stringtie.gtf
 
 # Loop
 for i in 08.Mapping.RNA/*.bam
 do
 sample=$(basename $i .bam)
-stringtie $i -p 25 -G 05.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/${sample}_stringtie.gtf
+stringtie $i -p 25 -G 06.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/${sample}_stringtie.gtf
+done
 ```
 
 **Sintaxis**
@@ -1395,7 +1400,9 @@ echo -e 'acetone_stringtie.gtf\noil1-2_R1_stringtie.gtf\noil1-2_R2_stringtie.gtf
 Ejecute el comando `merge` de StringTie:
 
 ```
-stringtie --merge -G 05.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/stringtie_merged.gtf 09.AssemblyRNA/mergelist.txt
+cd 09.AssemblyRNA
+
+stringtie --merge -G ../06.GenePrediction/ecoli_genome_orf.gff -o stringtie_merged.gtf mergelist.txt
 ```
 ### 5.3.2. Extrayendo las secuencias
 
@@ -1407,7 +1414,7 @@ Instale el programa en el ambiente bioinfo.
 
 ```
 # Active el ambiente
-conda activate bioindo
+conda activate bioinfo
 
 # Instale el ambiente
 conda install -c bioconda gffread
@@ -1418,7 +1425,9 @@ conda install -c bioconda gffread
 Para extraer las secuencias, ejecute el siguiente comando:
 
 ```
-gffread 09.AssemblyRNA/stringtie_merged.gff -g 03.Assembly/Escherichia_coli_ATCC_8739.fasta -w 09.AssemblyRNA/all_transcripts.fasta
+cd ..
+
+gffread 09.AssemblyRNA/stringtie_merged.gtf -g 03.Assembly/Escherichia_coli_ATCC_8739.fasta -w 09.AssemblyRNA/all_transcripts.fasta
 ```
 
 ## 5.4. Cuantificación de la expresión
@@ -1466,7 +1475,83 @@ done
  
 Use `less` para ver el contenido de la tabla `abundance.tsv` que se encuentra dentro de la carpeta `12.TranscriptQuantification/`.
 
+El siguiente paso es unir las tablas de abundancia de cada muestra y construir la matriz de abundancia para iniciar el análisis de expresión diferencial. El script `abundance_estimates_to_matrix.pl`, de la herramienta [Trinity](https://github.com/trinityrnaseq/trinityrnaseq) permite la construcción de la matriz de abundancia. En este tutorial no se usará como tal el programa Trinity, que es un ensamblador de RNA-seq *de novo*, recomendado para tratar datos de metatranscriptómica. Sin embargo, es necesario descargar el repositorio de la herramienta:
 
+```
+git clone https://github.com/trinityrnaseq/trinityrnaseq
+```
+
+El comando anterior descargará una carpeta llamada `trinityrnaseq/`. El script estará en el directorio `trinityrnaseq/util/`
+
+Antes de ejecutar el script, es necesario modificar los nombres de las tablas de abundancia de cada muestra, de manera que puedan ser eficientemente diferenciados entre ellos.
+
+```
+cp 10.TranscriptsQuantification/acetone/abundance.tsv 10.TranscriptsQuantification/acetone.tsv
+
+cp 10.TranscriptsQuantification/oil1-2_R1/abundance.tsv 10.TranscriptsQuantification/oil1-2_R1.tsv
+
+cp 10.TranscriptsQuantification/oil1-2_R2/abundance.tsv 10.TranscriptsQuantification/oil1-2_R2.tsv
+
+cp 10.TranscriptsQuantification/oil1-2_R3/abundance.tsv 10.TranscriptsQuantification/oil1-2_R3.tsv
+
+cp 10.TranscriptsQuantification/oil1-4_R1/abundance.tsv 10.TranscriptsQuantification/oil1-4_R1.tsv
+
+cp 10.TranscriptsQuantification/oil1-4_R2/abundance.tsv 10.TranscriptsQuantification/oil1-4_R2.tsv
+
+cp 10.TranscriptsQuantification/oil1-4_R3/abundance.tsv 10.TranscriptsQuantification/oil1-4_R3.tsv
+
+cp 10.TranscriptsQuantification/oil1-8_R1/abundance.tsv 10.TranscriptsQuantification/oil1-8_R1.tsv
+
+cp 10.TranscriptsQuantification/oil1-8_R2/abundance.tsv 10.TranscriptsQuantification/oil1-8_R2.tsv
+
+cp 10.TranscriptsQuantification/oil1-8_R3/abundance.tsv 10.TranscriptsQuantification/oil1-8_R3.tsv
+
+cp 10.TranscriptsQuantification/water_R1/abundance.tsv 10.TranscriptsQuantification/water_R1.tsv
+
+cp 10.TranscriptsQuantification/water_R2/abundance.tsv 10.TranscriptsQuantification/water_R2.tsv
+```
+
+Ejecute el script
+
+```
+# Active el ambiente bioinfo
+conda activate bioinfo
+
+# Entre al directorio 10
+cd 10.TranscriptsQuantification/
+
+# Ejecute el script
+perl trinityrnaseq/util/abundance_estimates_to_matrix.pl --est_method kallisto --gene_trans_map none acetone.tsv oil1-2_R1.tsv oil1-2_R2.tsv oil1-2_R3.tsv oil1-4_R1.tsv oil1-4_R2.tsv oil1-4_R3.tsv oil1-8_R1.tsv oil1-8_R2.tsv oil1-8_R3.tsv water_R1.tsv water_R2.tsv
+```
+
+Los archivos de salida son:
+
+* `kallisto.isoform.TMM.EXPR.matrix`: matriz normalizada por TMM
+* `kallisto.isoform.TPM.not_cross_norm`: matriz de TPM
+* `kallisto.isoform.counts.matrix`: matriz de counts
+* `kallisto.isoform.TPM.not_cross_norm.TMM_info.txt`: estadística de los factores de normalización por profundidad de la secuenciación
+* `kallisto.isoform.TPM.not_cross_norm.runTMM.r`: script en R para realizar la normalización en TMM
+
+
+```
+mkdir 11.DifferentialExpression
+
+cd 11.DifferentialExpression
+
+nano design_matrix.txt
+
+sample  condition
+acetone acetone_treated
+oil1-2  oil_tretated_0.5
+oil1-4  oil_treated_0.25
+oil1-8  oil_treated_0.125
+water   control
+
+echo -e "target_id\tgene" > transcript2gene.txt
+
+grep -i ">" ../09.AssemblyRNA/all_transcripts.fasta | sed 's/>//g' | sed 's/gene=//g' | awk '{print $1 "\t" $2}' >> transcript2gene.txt
+
+```
 
 
 

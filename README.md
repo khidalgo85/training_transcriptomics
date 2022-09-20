@@ -709,9 +709,9 @@ herramienta que desea, y econtratá el comonado para instalación.
 **Nota**: Las herramientas usadas en este tutorial serán instaladas a
 medida que van apareciendo dentro del pipeline.
 
-## II. Procesamiento bioinformático
+# II. Adquisición y organización de los datos
 
-### 1 Organización de directorios
+## 2.1. Organización de directorios
 
 Para mantener el orden durante la ejecución del *pipeline* es
 recomendado crear directorios secuenciales a medida que son realizados
@@ -722,14 +722,11 @@ Asigne el nombre de transcriptomica
 
     mkdir transcriptomica
 
--   Entre al nuevo directorio usando el comando `cd` (*change
-    directory*)
-
-<!-- -->
+Entre al nuevo directorio usando el comando `cd` (*change directory*)
 
     cd transcriptomica/
 
--   Cree un nuevo directorio para almacenar las secuencias brutas.
+Cree un nuevo directorio para almacenar las secuencias brutas.
 
 > **Tip:** Debido a que la mayoria de las etapas del workflow son
 > secuenciales, es recomendable nombrar los directorios comenzando con
@@ -737,26 +734,24 @@ Asigne el nombre de transcriptomica
 
     mkdir 00.RawData
 
-### 2. Adquisición de datos
+## 2.2 Adquisición de datos
 
-#### 2.1. SRA Toolkit
+### 2.2.1. SRA Toolkit
 
 Para la adquisición de datos, será instalado el programa [SRA
 Toolkit](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit),
 el cual nos permitirá descargar las secuencias directamente del NCBI en
 el servidor.
 
--   Descargue el programa en el siguiente
-    [link](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit)
+Descargue el programa en el siguiente
+[link](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit)
 
--   Seleccione el archivo según su sistema operativo. En este tutorial
-    será instalada la version para [Ubuntu Linux
-    64bits](https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz).
+Seleccione el archivo según su sistema operativo. En este tutorial será
+instalada la version para [Ubuntu Linux
+64bits](https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz).
 
--   Usando el comando `wget`, descargue el archivo de la wed
-    directamente en el servidor
-
-<!-- -->
+Usando el comando `wget`, descargue el archivo de la wed directamente en
+el servidor
 
     # Salga de la carpeta transcriptomica
     cd ..
@@ -764,55 +759,44 @@ el servidor.
     # Descargue el programa en la carpeta /home/user/
     wget --output-document sratoolkit.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
 
--   Será descargada un archivo compactado (`sratoolkit.tar.gz`). Use el
-    comando tar para descompactar
-
-<!-- -->
+Será descargada un archivo compactado (`sratoolkit.tar.gz`). Use el
+comando tar para descompactar
 
     tar -vxzf sratoolkit.tar.gz
 
--   El archivo será descompactado en la carpeta
-    `sratoolkit.3.0.0-ubuntu64/`
+El archivo será descompactado en la carpeta `sratoolkit.3.0.0-ubuntu64/`
 
--   Configure el camino al programa
-
-<!-- -->
+Configure el camino al programa
 
     export PATH=$PATH:$PWD/sratoolkit.3.0.0-ubuntu64/bin
 
--   Verifique que la configuración está correcta
-
-<!-- -->
+Verifique que la configuración está correcta
 
     which fastq-dump
 
--   Deberá aparecer el camino al directorio que contiene el programa:
-
-<!-- -->
+Deberá aparecer el camino al directorio que contiene el programa:
 
     /home/user/sratoolkit.3.0.0-ubuntu64/bin/fastq-dump
 
--   Antes de entrar en el menú de configuración, seleccione un
-    directorio vacio para usarlo como el repositorio de las secuencias a
-    descargar. Para esto siga la siguiente secuencia de comandos:
-
-<!-- -->
+Antes de entrar en el menú de configuración, seleccione un directorio
+vacio para usarlo como el repositorio de las secuencias a descargar.
+Para esto siga la siguiente secuencia de comandos:
 
     # Cree un directorio llamado secuencias-ncbi
     mkdir secuencias-ncbi
 
--   Ingrese al menú de configuración con `vdb-config -i`
+Ingrese al menú de configuración con `vdb-config -i`
 
-    -   Verifique que la opción *Remote Access* está habilitada
-    -   Ingrese a la pestaña *Cache* y verifique que la opción *local
-        file-caching* está habilitada.
-    -   En la opción \*Location of user-repository, busque el directorio
-        creado anteriormente `secuencias-ncbi/`
-    -   En la pestaña *AWS*, habilite la opción *report cloud instance
-        identity*
-    -   Salve las configuraciones y salga del menú con x.
+-   Verifique que la opción *Remote Access* está habilitada
+-   Ingrese a la pestaña *Cache* y verifique que la opción *local
+    file-caching* está habilitada.
+-   En la opción \*Location of user-repository, busque el directorio
+    creado anteriormente `secuencias-ncbi/`
+-   En la pestaña *AWS*, habilite la opción *report cloud instance
+    identity*
+-   Salve las configuraciones y salga del menú con x.
 
-#### 2.2. Descargando las secuencias
+### 2.2.2. Descargando las secuencias
 
 Para la ejecución de este *pipeline* serán usadas las secuencias de
 RNA-seq del artículo en estudio y secuencias del genoma de *E.coli*
@@ -821,12 +805,10 @@ transcriptomas.
 
 **Secuencias RNA-seq**
 
--   Para las secuencias de RNA-seq, usando el comando `nano`, cree un
-    archivo llamado `SRR-seqs-RNA.txt` en donde serán listados los
-    códigos de acceso (SRR number) de los *datasets*. Siga la secuencia
-    de códigos presentados a continuación:
-
-<!-- -->
+Para las secuencias de RNA-seq, usando el comando `nano`, cree un
+archivo llamado `SRR-seqs-RNA.txt` en donde serán listados los códigos
+de acceso (SRR number) de los *datasets*. Siga la secuencia de códigos
+presentados a continuación:
 
     # entre en la carpeta secuencias-ncbi/
     cd secuencias-ncbi/
@@ -844,10 +826,8 @@ SRR12922095 SRR12922094 SRR12922093 SRR12922092 SRR12922091 SRR12922090
 Copie y pegue dentro del archivo en el terminal. Para cerrar \[Ctrl +
 X\], confirme que desea guardar los cambios con S.
 
--   Debido a que es un proceso que va a demorar, es recomendable hacerlo
-    usando el programa screen.
-
-<!-- -->
+Debido a que es un proceso que va a demorar, es recomendable hacerlo
+usando el programa screen.
 
     screen -S sra
 
@@ -864,11 +844,9 @@ una serie de directorios, la carpeta `sra` contiene los archivos `.sra`.
 Use los comandos `cd` para cambiar de directorio y `ll` para listar el
 contenido.
 
--   El siguiente paso es transformar los archivos `.sra` para `.fastq`.
-    Usando la función `for`, puede automatizar el proceso para que todas
-    los archivos sean transformados secuencialmente.
-
-<!-- -->
+El siguiente paso es transformar los archivos `.sra` para `.fastq`.
+Usando la función `for`, puede automatizar el proceso para que todas los
+archivos sean transformados secuencialmente.
 
     for i in ./*.sra
     do
@@ -915,7 +893,7 @@ Use el comando `mv` para mover los archivos `.fastq` del genoma de *E.
 coli* desde la carpeta `secuencias-ncbi/sra/` para la carpeta
 `/home/user/transcriptomica/01.RefGenome/`
 
-#### 2.3. Organización de los *datasets*
+## 2.3. Organización de los *datasets*
 
 Debido a que los nombres de los archivos son los códigos de acceso SRR,
 es recomendable cambiarlos por nombres más fáciles de entender y
@@ -947,16 +925,18 @@ ejemplo: `oil1-2_R3_1.fq` y `oil1-2_R3_2.fq`.
 **Tip:** Use la tecla TAB para facilitar y evitar errores a la hora de
 digitar el nombre de los archivos.
 
-## 3. Control de Calidad
+# III. Control de calidad
 
-#### 3.1 Evaluación de la calidad
+## 3.1. Control de Calidad
+
+### 3.1.1. Evaluación de la calidad
 
 Para la evaluación de la calidad será usado el programa
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) que
 es una herramienta que permite observar graficamente la calidad de las
 secuencias de Illumina.
 
-**3.1.1. Instalación**
+**Instalación**
 
 Las instrucciones para instalación usando conda se encuentran
 [aqui](https://anaconda.org/bioconda/fastqc). Sin embargo aqui en este
@@ -988,7 +968,7 @@ Posteriormente se procede a la instalación del programa:
 De nuevo será cuestionado si desea continuar con el proceso o no.
 Escriba `y`.
 
-**3.1.2. Uso**
+**Uso**
 
 La primera etapa del proceso es la evaluación de la calidad de las
 secuencias cortas (Illumina) usando *FastQC*, con el objetivo de
@@ -1073,7 +1053,7 @@ Analizando cada uno de los gráficos son decididos los parametros para la
 etapa de depuración. Para este caso es necesario filtrar por calidad,
 cortar las primeras bases y filtrar por tamaño.
 
-#### 3.2 Depuración/*Trimming*
+### 3.1.2. Depuración/*Trimming*
 
 Según fue evaluado en el control de calidad, será necesario filtrar
 algunas lecturas del genoma de *E. coli*. Las secuencias de las
@@ -1088,7 +1068,7 @@ saber que otros parametros y como funciona cada uno de ellos, consulte
 el
 [manual](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf).
 
-**3.2.1 Instalación**
+**Instalación**
 
 Como se trata de una herramienta que participa dentro del proceso de
 control de calidad, será instalada dentro del ambiente virtual
@@ -1100,7 +1080,7 @@ control de calidad, será instalada dentro del ambiente virtual
     # Instale Trimmomatic
     conda install -c bioconda trimmomatic
 
-**3.2.2. Uso**
+**Uso**
 
 Para los datos aqui analizados se usará la siguiente linea de comando:
 
@@ -1155,7 +1135,7 @@ Después del proceso de filtrado sobrevivieron
 de las secuencias iniciales
 (![70'560.424](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;70%27560.424 "70'560.424")).
 
-#### 3.3 Cobertura
+### 3.1.3. Cobertura
 
 Cuando se trabaja con secuenciación de genomas, el siguiente paso
 después de conocer la cantidad de secuencias obtenidas y remover las
@@ -1175,9 +1155,9 @@ secuenciamiento Illumina tenemos:
 
     #> [1] "La cobertura es de 960X"
 
-### 4. Ensamblaje *de novo*
+# IV. Genómica
 
-#### 4.1 Spades
+## 4.1 Ensamblaje *de novo*
 
 Un ensamblaje es el proceso de alineamiento de secuencias cortas con el
 objetivo de recuperar una secuencia mayor. En el caso del ensamblaje *de
@@ -1191,6 +1171,8 @@ ser usado tanto para lecturas cortas como largas. Lea atentamente el
 este programa tiene muchas opciones diferentes. Spades usa el algoritmo
 del *Grafo de Bruijn* para el montaje de las secuencias.
 
+**Instalación**
+
 Siga las siguientes instrucciones para la instalación de **Spades**
 dentro de ambiente virtual llamado *assembly*.
 
@@ -1202,6 +1184,8 @@ dentro de ambiente virtual llamado *assembly*.
 
     # Instale Spades
     conda install -c bioconda spades
+
+**Uso**
 
 El ensamble será realizado ejecutando el comando:
 
@@ -1249,13 +1233,13 @@ encuentra más detalles.
 -   `assembly_graph.fastg`: contiene el grafo del montaje en formato
     FASTG
 
-#### 4.2 Evaluación del ensamble
+## 4.2 Evaluación del ensamble
 
 El ensamble debe ser evaluado a través de métricas que representan la
 calidad del genoma. En este paso será calculado el N50, el número de
 contigs, el tamaño del genoma y que tan completo y contaminado está.
 
-**4.2.1. Quast**
+### 4.2.1. Quast
 
 [Quast v5.0.2](http://quast.sourceforge.net/docs/manual.html) (*QUality
 ASsesment Tool*) es posible evaluar las principales estadísticas del
@@ -1265,7 +1249,7 @@ donde es posible observar esas estadísticas básicas del montaje. Serán
 comparados los montajes obtenidos anteriormente, con el objetivo de
 escoger el mejor, para las siguientes etapas.
 
-**4.2.1.1. Instalación**
+**Instalación**
 
     # Cree el ambiente quast
     conda create -n quast
@@ -1276,7 +1260,7 @@ escoger el mejor, para las siguientes etapas.
     # Instale Quast
     conda install -c bioconda quast
 
-**4.2.1.1. Uso**
+**Uso**
 
     # Vuelva al diretorio base
 
@@ -1338,7 +1322,7 @@ filtrados y sin filtar.
     # Ejecute Quast
     quast.py 03.Assembly/01.Careful/scaffolds.fasta 03.Assembly/01.Careful/scaffolds_filtered.fasta 03.Assembly/02.NoCareful/scaffolds.fasta 03.Assembly/02.NoCareful/scaffolds_filtered.fasta -o 04.AssemblyQuality/01.Quast
 
-**4.2.2. CheckM**
+### 4.2.2. CheckM
 
 Para evaluar que tan completo y contaminado están los ensambles es usada
 la herramienta [CheckM](https://github.com/Ecogenomics/CheckM/wiki). La
@@ -1399,7 +1383,7 @@ usando el comando `less`. Descargue el reporte en su computador.
 Para más detalles sobre la interpretación del reporte visite este
 [link.](https://www.biostars.org/p/447744/)
 
-### 5. Anotación Taxonómica
+## 4.3. Anotación Taxonómica
 
 La clasificación con base en datos de genoma tiene mayor poder de
 resolución en comparación al usar apenas un gene marcador, pues esta
@@ -1433,3 +1417,407 @@ Ejecute GTDBtk usando el seguinte comando:
 
 El programa genera varios archivos de salida que están resumidos en
 `05.TaxonomyAnnotation/gtdbtk.bac120.summary.tsv`.
+
+## 4.4. Predicción de genes
+
+el objetivo de esta etapa es procurar los ORFs (*Open Reading Frames*)
+dentro de los contig/scaffolds. Es decir, predecir donde inician e
+terminan los genes. Basicamente el programa busca codones de inicio y de
+*stop*.Para este objetivo será usada la herramienta
+[Prodigal](https://github.com/hyattpd/prodigal/wiki).
+
+**Instalación**
+
+Instale el programa en el ambiente bioinfo
+
+    # Active el ambiente
+    conda activate bioinfo
+
+    # Instale Prodigal
+    conda install -c bioconda prodigal
+
+Para ejecutar el programa utilice el seguiente comando:
+
+    # Cree una carpeta para guardar el resultado
+    mkdir 06.GenePrediction
+
+    #
+    prodigal -f gff -i 03.Assembly/03.Scaffolds/careful_filtered.fasta -o 06.GenePrediction/careful_filtered_orf.gff -a 06.GenePrediction/careful_filtered_proteins.faa -d 06.GenePrediction/careful_filtered_ORFnucleotides.fa -s 06.GenePrediction/careful_filtered_genes
+
+**Sintaxis**
+
+    prodigal -f <output_format> -i <input_assembly.fasta> -o <output_gbk_file> -a <output_protein_seq_file> -d <output_nucleotides_seq_file> -s <output_coordinates_file>
+
+El archivo `06.GenePrediction/careful_filtered_orf.gff` incluyendo las
+secuencias condificantes y no codificantes y las posiciones en cada
+contig. Adicionalmente, el programa genera archivos con las secuencias
+de nucleótidos (`06.GenePrediction/careful_filtered_ORFnucleotides.fa`)
+y proteínas (`06.GenePrediction/careful_filtered_proteins.faa`) de cada
+gene predicho.
+
+*Nota:* Ejecute el mismo comando en el genoma de *E. coli* ATCC8739. Use
+`ecoli_genome_` como prefijo para los nombres de los archivos de salida.
+
+# V. Transcriptómica
+
+En esta sección serán abordadas las etapas y programas para la
+evaluación librerias de RNA-seq.
+
+### 5.1. Remoción de secuencias de rRNA
+
+Aunque durante el proceso de extracción de RNA se use un kit para la
+depleción de RNA ribosomal, puede suceder que en las librerias de
+RNA-seq aún existan algunas secuencias de rRNA, las cuales podrán ser
+eliminadas usando el programa
+[SortmeRNA](https://github.com/biocore/sortmerna), que a su vez usa
+bases de dados de rRNA, tales como Rfam 5S, Rfam 5.8S,
+SILVA\_138.1\_NR99\_SSURef\_tax\_silva and
+SILVA\_138.1\_LSURef\_tax\_silva, para buscar y eliminar esas secuencias
+de las bibliotecas.
+
+**Instalación**
+
+Instale SortmeRNA en un ambiente virtual llamado mapping
+
+    # cree el ambiente
+    conda create -n mapping
+
+    # Active el ambiente
+    conda activate mappin
+
+    # Instale SortmeRNA
+    conda install -c bioconda sortmerna
+
+Las bases de datos son descargadas de las páginas de [SILVA
+database](https://www.arb-silva.de/) y [Rfam](https://rfam.xfam.org/).
+
+**Uso**
+
+    for i in 00.RawData/*_1.fq
+    do
+    SAMPLE=$(basename $i _1.fq)
+    nohup sortmerna --ref /home/drm/Documentos/database/Rfam/Rfam_5S.fa --ref /home/drm/Documentos/database/Rfam/Rfam_5.8S.fa --ref /home/drm/Documentos/database/silva/SILVA_138.1_NR99_16S_28S.fasta --ref /home/drm/Documentos/database/silva/SILVA_138.1_23S_28S.fasta --reads $i --reads 00.RawData/${SAMPLE}_2.fq --paired_in --threads 50 --workdir 07.SortmeRNA/${SAMPLE}/ --idx-dir 07.SortmeRNA/${SAMPLE}/ --kvdb 07.SortmeRNA/${SAMPLE}/kvdb --fastx --aligned 07.SortmeRNA/${SAMPLE}/${SAMPLE}_aligned.fasta --other 07.SortmeRNA/${SAMPLE}/${SAMPLE}_other.fasta --out2
+    done
+
+El comando anterior, ejecuta SortmeRNA en todas las bibliotecas de
+RNA-seq. Al final de proceso, cada muestra tendrá una carpeta dentro del
+directorio `07.SortmeRNA/`. Los archivos terminados en `_other_fwd.fq` y
+`_other_rev.fq`, contiene las secuencias que *no* alinearon contra las
+bases de dados de rRNA, es decir libres de rRNA. Estos serán los
+archivos que serán usados para los siguientes pasos.
+
+### 5.2. Alineamiento a um genoma de referencia
+
+Después de la evaluación de la calidad y remoción de rRNA, se debe hacer
+un alineamiento o mapeo de las lecturas para determinar en qué parte del
+genoma o de dónde se originaron las lecturas. Hay una serie de
+herramientas que realizan esta función. En este tutorial usaremos
+[HISAT2](https://github.com/DaehwanKimLab/hisat2), pero también una
+herramienta como [STAR](https://github.com/alexdobin/STAR) o
+[TopHat2](https://github.com/infphilo/tophat), hacen el trabajo.
+
+En este caso será usado el genoma obtenido desde la página de la
+colección ATCC, que debe estar almacenado en la carpeta `03.Assembly/`.
+
+La primera etapa del proceso con
+[HISAT2](https://daehwankimlab.github.io/hisat2/), es llamada de
+busqueda de semillas (*seeds*), y consiste en que para cada read el
+programa buscará la porción de la lectura más larga que coincida
+exactamente con una o más ubicaciones en el genoma de referencia
+(*seed1*). Posteriormente, volverá a buscar la parte no mapeada de la
+lectura para encontrar la siguiente secuencia más larga que coincida
+exactamente con el genoma de referencia (*seed2*). Y así hasta que
+encuentra las *seeds* de todas las lecturas. Esta forma de mapeo hace
+que el algorítmo sea eficiente y rápido. La segunda etapa, comprende la
+clusterización de *seeds* próximas, para generar una read completa.
+Después, el programa unirá las *seeds* baseado en el mejor alineamiento
+de las reads (*score* de *mismatches*, *indels*, *gaps*, etc)
+
+**Instalação**
+
+HISAT2 v2.2.1 será instalado en el ambiente virutal mapping. También es
+necesario instalar la herramienta [SamTools](http://www.htslib.org/),
+que sirve en la manipulación de archivos `.sam` y `.bam`.
+
+    # Activa el ambiente
+    conda activate mapping
+
+    # Instala
+    conda install -c bioconda hisat2
+
+    # Instala SamTools
+    conda install -c bioconda samtools
+
+#### 5.2.1. Indexando el genoma de referencia
+
+El primer paso para el alineamiento es indexar el genoma. Cree un
+directorio para todo el proceso de mapeo (p.e. `08.Mapping.RNA`)
+
+    # Indexando
+    hisat2-build -p 10 03.Assembly/Escherichia_coli_ATCC_8739.fasta 08.Mapping.RNA/Escherichia_coli_ATCC_8739
+
+**Sintaxis** `hisat2-build -p # [genome] [index]`
+
+-   `-p`: número de threads
+-   `[genome]`: Genoma de referencia
+-   `[index]`: índice
+
+#### 5.2.2. Mapeo
+
+En el primer comando **HISAT2** va a hacer el alinemiento, el cual
+generará una serie de archivos `.sam` (*Sequence aligment Map*). En el
+segundo comando, **SamTools** transformará a archivos `.bam` (*Binary
+Alignment Map*), los cuales son una versión comprimida de `.sam`.
+
+    hisat2  --dta -p 15 -x 08.Mapping.RNA/Escherichia_coli_ATCC_8739 -1 00.RawData/acetone_1.fq -2 00.RawData/acetone_2.fq -S 08.Mapping.RNA/acetone.sam
+
+    # loop
+    for i in 00.RawData/*_1.fq
+    do
+    sample=$(basename $i _1.fq)
+    hisat2 --dta -p 15 -x 08.Mapping.RNA/Escherichia_coli_ATCC_8739 -1 $i -2 00.RawData/${sample}_2.fq -S 08.Mapping.RNA/${sample}.sam
+    done
+
+**Sintaxis**
+
+`hisat2 --dta -p <num_nucleos> -x <index> -1 RNA-seqs_pair1 -2 RNA-seqs_pair2`
+
+-   `--dta`: Genera un reporte que será usado en el próximo passo.
+-   `-p`: Número de núcleos
+-   `-x`: índice
+-   `-1`: Secuencias RNA-seq pair 1
+-   `-2`: Secuencias RNA-seq pair 2
+
+#### 5.2.3. Transformando los archivos del mapeo
+
+El primer paso es transformar el archivo de salida del mapeo (`.sam`)
+para `.bam`
+
+    samtools sort -o 08.Mapping.RNA/acetone.bam 08.Mapping.RNA/acetone.sam
+
+    # loop
+    for i in 08.Mapping.RNA/*.sam
+    do
+    sample=$(basename $i .sam)
+    samtools sort -o 08.Mapping.RNA/${sample}.bam $i
+    done
+
+**Sintaxis**
+
+    samtools sort -o <output.bam> <input.sam>
+
+### 5.3. Ensamble del transcriptoma
+
+El objetivo de esta etapa es el montaje del transcriptoma, usando los
+alineamientos del paso anterior. En este tutorial, usaremos
+[StringTie](https://ccb.jhu.edu/software/stringtie/), el cual emplea
+algoritmos eficientes para la recuperación de la estructura del
+trasncriptoma y la estimación de la abundancia a partir de lecturas de
+RNA-Seq alineadas con un genoma de referencia. Toma como entrada los
+alineamientos SAM/BAM, ordenados por coordenadas y produce una salida
+GTF que consiste en transcritos ensamblados y sus niveles estimados
+(FPKM / TPM y valores de cobertura).
+
+**Instalación**
+
+    # Activa el ambiente assembly
+    conda activate assembly
+
+    # Instale StringTie
+    conda install -c bioconda stringtie
+
+Cree un directorio para la salida del proceso:
+
+    # Cree un directorio para el montaje
+    mkdir 09.AssemblyRNA
+
+    # StringTie
+    stringtie acetone.bam -p 25 -G 06.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/acetone_stringtie.gtf
+
+    # Loop
+    for i in 08.Mapping.RNA/*.bam
+    do
+    sample=$(basename $i .bam)
+    stringtie $i -p 25 -G 06.GenePrediction/ecoli_genome_orf.gff -o 09.AssemblyRNA/${sample}_stringtie.gtf
+    done
+
+**Sintaxis**
+
+    stringtie <sorted.bam> -p <num_nucleos> -G <reference.genome.gff> -o <output.gtf>  -l <transcriptos_prefix>
+
+El archivo de salida `.gtf` contiene las definiciones estructurales de
+los transcriptos ensamblados por **StringTie** a partir de la
+información de mapeo.
+
+Use `less` para ver el contenido del archivo de salida
+`09.AssemblyRNA/acetone.gtf`.
+
+### 5.3.1. Transcriptoma final
+
+A continuación serán unidos los transcriptomas de cada muestra para
+obtner el transcriptoma final. Para esto, será creado un archivo
+(`mergelist.txt`) con el nombre de los *output* obtenidos en el comando
+de StringTie.
+
+    # Creando el archivo mergelist.txt
+    echo -e 'acetone_stringtie.gtf\noil1-2_R1_stringtie.gtf\noil1-2_R2_stringtie.gtf\noil1-2_R3_stringtie.gtf\noil1-4_R1_stringtie.gtf\noil1-4_R2_stringtie.gtf\noil1-4_R3_stringtie.gtf\noil1-8_R1_stringtie.gtf\noil1-8_R2_stringtie.gtf\noil1-8_R3_stringtie.gtf\nwater_R1_stringtie.gtf\nwater_R2_stringtie.gtf ' > 09.AssemblyRNA/mergelist.txt 
+
+Ejecute el comando `merge` de StringTie:
+
+    cd 09.AssemblyRNA
+
+    stringtie --merge -G ../06.GenePrediction/ecoli_genome_orf.gff -o stringtie_merged.gtf mergelist.txt
+
+### 5.3.2. Extrayendo las secuencias
+
+Hasta aqui tenemos el archivo final de coordenadas genómicas
+(`09.AssemblyRNA/stringtie_merged.gtf`). En esta etapa usaremos ese
+archivo para extraer las secuencias en un archivo `.fasta`, usando el
+programa [GFFREAD](https://github.com/gpertea/gffread).
+
+**Instalación**
+
+Instale el programa en el ambiente bioinfo.
+
+    # Active el ambiente
+    conda activate bioinfo
+
+    # Instale el ambiente
+    conda install -c bioconda gffread
+
+**Uso**
+
+Para extraer las secuencias, ejecute el siguiente comando:
+
+    cd ..
+
+    gffread 09.AssemblyRNA/stringtie_merged.gtf -g 03.Assembly/Escherichia_coli_ATCC_8739.fasta -w 09.AssemblyRNA/all_transcripts.fasta
+
+## 5.4. Cuantificación de la expresión
+
+Después de obtenidos los transcriptos, estos deben ser cuantificados. El
+programa que será usado en este tutorial, se llama
+[Kallisto](https://pachterlab.github.io/kallisto/). Este software
+cuantifica las abundancias de transcriptos. Se basa en la novedosa idea
+de pseudoalineación para determinar rápidamente la compatibilidad de
+lecturas con los *targets*, sin necesidad de alineación.
+
+**Instalación**
+
+Instale Kallisto el ambiente **bioinfo**
+
+    # Activa el ambiente bioinfo
+    conda activate bioinfo
+
+    # Instale Kallisto
+    conda install -c bioconda kallisto
+
+Cree un directorio para el proceso de cuantificación
+
+    mkdir 10.TranscriptsQuantification
+
+El primer paso es indexar el archivo
+`09.AssemblyRNA/all_transcripts.fasta`:
+
+    kallisto index -i 09.AssemblyRNA/index_transcritos 09.AssemblyRNA/all_transcripts.fasta
+
+A continuación serán cuantificados los transcriptomas de cada libreria.
+
+    kallisto quant -i 09.AssemblyRNA/index_transcritos -o 10.TranscriptsQuantification/acetone -b 1000 -t 20 00.RawData/acetone_1.fq 00.RawData/acetone_2.fq
+
+    # Loop
+    for i in 00.RawData/*_1.fq
+    do
+    sample=$(basename $i _1.fq)
+    kallisto quant -i 09.AssemblyRNA/index_transcritos -o 10.TranscriptsQuantification/${sample} -b 1000 -t 20 $i 00.RawData/${sample}_2.fq
+    done
+
+Serán creadas carpetas para cada muestra y dentro se encuentra el
+archivo de salida de **Kallisto** que es una tabla llamada
+`abundance.tsv` con el ID de cada transcrito y el valor de **TPM** para
+cada uno de ellos, además del tamaño de cada uno.
+
+Use `less` para ver el contenido de la tabla `abundance.tsv` que se
+encuentra dentro de la carpeta `12.TranscriptQuantification/`.
+
+El siguiente paso es unir las tablas de abundancia de cada muestra y
+construir la matriz de abundancia para iniciar el análisis de expresión
+diferencial. El script `abundance_estimates_to_matrix.pl`, de la
+herramienta [Trinity](https://github.com/trinityrnaseq/trinityrnaseq)
+permite la construcción de la matriz de abundancia. En este tutorial no
+se usará como tal el programa Trinity, que es un ensamblador de RNA-seq
+*de novo*, recomendado para tratar datos de metatranscriptómica. Sin
+embargo, es necesario descargar el repositorio de la herramienta:
+
+    git clone https://github.com/trinityrnaseq/trinityrnaseq
+
+El comando anterior descargará una carpeta llamada `trinityrnaseq/`. El
+script estará en el directorio `trinityrnaseq/util/`
+
+Antes de ejecutar el script, es necesario modificar los nombres de las
+tablas de abundancia de cada muestra, de manera que puedan ser
+eficientemente diferenciados entre ellos.
+
+    cp 10.TranscriptsQuantification/acetone/abundance.tsv 10.TranscriptsQuantification/acetone.tsv
+
+    cp 10.TranscriptsQuantification/oil1-2_R1/abundance.tsv 10.TranscriptsQuantification/oil1-2_R1.tsv
+
+    cp 10.TranscriptsQuantification/oil1-2_R2/abundance.tsv 10.TranscriptsQuantification/oil1-2_R2.tsv
+
+    cp 10.TranscriptsQuantification/oil1-2_R3/abundance.tsv 10.TranscriptsQuantification/oil1-2_R3.tsv
+
+    cp 10.TranscriptsQuantification/oil1-4_R1/abundance.tsv 10.TranscriptsQuantification/oil1-4_R1.tsv
+
+    cp 10.TranscriptsQuantification/oil1-4_R2/abundance.tsv 10.TranscriptsQuantification/oil1-4_R2.tsv
+
+    cp 10.TranscriptsQuantification/oil1-4_R3/abundance.tsv 10.TranscriptsQuantification/oil1-4_R3.tsv
+
+    cp 10.TranscriptsQuantification/oil1-8_R1/abundance.tsv 10.TranscriptsQuantification/oil1-8_R1.tsv
+
+    cp 10.TranscriptsQuantification/oil1-8_R2/abundance.tsv 10.TranscriptsQuantification/oil1-8_R2.tsv
+
+    cp 10.TranscriptsQuantification/oil1-8_R3/abundance.tsv 10.TranscriptsQuantification/oil1-8_R3.tsv
+
+    cp 10.TranscriptsQuantification/water_R1/abundance.tsv 10.TranscriptsQuantification/water_R1.tsv
+
+    cp 10.TranscriptsQuantification/water_R2/abundance.tsv 10.TranscriptsQuantification/water_R2.tsv
+
+Ejecute el script
+
+    # Active el ambiente bioinfo
+    conda activate bioinfo
+
+    # Entre al directorio 10
+    cd 10.TranscriptsQuantification/
+
+    # Ejecute el script
+    perl trinityrnaseq/util/abundance_estimates_to_matrix.pl --est_method kallisto --gene_trans_map none acetone.tsv oil1-2_R1.tsv oil1-2_R2.tsv oil1-2_R3.tsv oil1-4_R1.tsv oil1-4_R2.tsv oil1-4_R3.tsv oil1-8_R1.tsv oil1-8_R2.tsv oil1-8_R3.tsv water_R1.tsv water_R2.tsv
+
+Los archivos de salida son:
+
+-   `kallisto.isoform.TMM.EXPR.matrix`: matriz normalizada por TMM
+-   `kallisto.isoform.TPM.not_cross_norm`: matriz de TPM
+-   `kallisto.isoform.counts.matrix`: matriz de counts
+-   `kallisto.isoform.TPM.not_cross_norm.TMM_info.txt`: estadística de
+    los factores de normalización por profundidad de la secuenciación
+-   `kallisto.isoform.TPM.not_cross_norm.runTMM.r`: script en R para
+    realizar la normalización en TMM
+
+<!-- -->
+
+    mkdir 11.DifferentialExpression
+
+    cd 11.DifferentialExpression
+
+    nano design_matrix.txt
+
+    sample  condition
+    acetone acetone_treated
+    oil1-2  oil_tretated_0.5
+    oil1-4  oil_treated_0.25
+    oil1-8  oil_treated_0.125
+    water   control
+
+    echo -e "target_id\tgene" > transcript2gene.txt
+
+    grep -i ">" ../09.AssemblyRNA/all_transcripts.fasta | sed 's/>//g' | sed 's/gene=//g' | awk '{print $1 "\t" $2}' >> transcript2gene.txt
