@@ -1960,10 +1960,10 @@ EnhancedVolcano(final.table,
 Use los comandos anteriores, modificando la condición(es) que quiere comparar.
 
 10. Plot PCA 
-```{r, warning=FALSE, comment=FALSE, background=FALSE, message=FALSE}
+```{r, warning=FALSE, comment=FALSE, background=FALSE, message=FALSE, background=FALSE}
 #Criando PCA para visualização da clusterização das amostras
 rld <- rlog(dds)
-assay(rld)
+
 plotPCA(rld, intgroup = "conditions")
 ```
 
